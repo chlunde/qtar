@@ -5,8 +5,6 @@
 #include <sys/ioctl.h>
 #include <sys/fcntl.h>
 #include <linux/fs.h>
-typedef uint64_t __u64;
-typedef uint32_t __u32;
 #include "fiemap.h"
 #include <errno.h>
 
@@ -24,7 +22,7 @@ uint64_t firstblock(const char *fname)
 
 	fd = open(fname, O_RDONLY);
 	if (fd == -1) {
-		printf("Open failed: %s: %s\n", fname, strerror(errno)); 
+		printf("Open failed: %s: %s\n", fname, strerror(errno));
 		return 0;
 	}
 
@@ -34,7 +32,7 @@ uint64_t firstblock(const char *fname)
 			close(fd);
 			return block;
 		}
-		printf("FIBMAP failed: %s: %s\n", fname, strerror(errno)); 
+		printf("FIBMAP failed: %s: %s\n", fname, strerror(errno));
 		use_fibmap = 0;
 	}
 
@@ -63,7 +61,9 @@ uint64_t firstblock(const char *fname)
 	close(fd);
 
 	if (fiemap->fm_extent_count == 0 || fiemap->fm_mapped_extents == 0) {
+#if 0
 		printf("extent_count == 0: %s\n", fname);
+#endif
 		return 0;
 	}
 	extent = &fiemap->fm_extents[0];

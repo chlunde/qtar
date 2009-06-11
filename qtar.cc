@@ -125,14 +125,14 @@ private:
 	std::string lookup_uname(uid_t uid) {
 		std::map<uid_t, std::string>::iterator it = uidcache.find(uid);
 		if (it == uidcache.end()) {
-		       struct passwd *pwent = getpwuid(uid);
-		       std::string uname;
-		       if (pwent)
-			       uname = pwent->pw_name;
+			struct passwd *pwent = getpwuid(uid);
+			std::string uname;
+			if (pwent)
+				uname = pwent->pw_name;
 
-		       uidcache.insert(std::pair<uid_t, std::string>(uid, uname));
+			uidcache.insert(std::pair<uid_t, std::string>(uid, uname));
 
-		       return uname;
+			return uname;
 		}
 
 		return (*it).second;
@@ -141,14 +141,14 @@ private:
 	std::string lookup_gname(gid_t gid) {
 		std::map<gid_t, std::string>::iterator it = gidcache.find(gid);
 		if (it == gidcache.end()) {
-		       struct group *grent = getgrgid(gid);
-		       std::string gname;
-		       if (grent)
-			       gname = grent->gr_name;
+			struct group *grent = getgrgid(gid);
+			std::string gname;
+			if (grent)
+				gname = grent->gr_name;
 
-		       gidcache.insert(std::pair<gid_t, std::string>(gid, gname));
+			gidcache.insert(std::pair<gid_t, std::string>(gid, gname));
 
-		       return gname;
+			return gname;
 		}
 
 		return (*it).second;
@@ -176,7 +176,7 @@ private:
 		archive_entry_set_pathname(entry, rel.c_str());
 		int r = archive_write_header(a, entry);
 		if (r != ARCHIVE_OK)
-			errx(EXIT_FAILURE, "archive_write_header failed: %s", archive_error_string(a));
+			errx(EXIT_FAILURE, "archive_write_header failed: %s, %s", rel.c_str(), archive_error_string(a));
 		archive_entry_free(entry);
 	}
 
@@ -208,7 +208,7 @@ private:
 		archive_entry_set_pathname(entry, rel.c_str());
 		int r = archive_write_header(a, entry);
 		if (r != ARCHIVE_OK)
-			errx(EXIT_FAILURE, "archive_write_header failed: %s", archive_error_string(a));
+			errx(EXIT_FAILURE, "archive_write_header failed: %s, %s", rel.c_str(), archive_error_string(a));
 
 		//std::cout << file.d_name << std::endl;
 		int fd = open(fq.c_str(), O_RDONLY);
@@ -230,20 +230,20 @@ private:
 		archive_entry_free(entry);
 	}
 
-        void heapwalk(struct us_dirent& dirent) {
+	void heapwalk(struct us_dirent& dirent) {
 //		std::cout << "heapwalk " << dirent.d_ino << "\t" << dirent.d_name << std::endl;
 
-                if (dirent.is_file() || dirent.is_link()) {
-                        queuefile(dirent);
+		if (dirent.is_file() || dirent.is_link()) {
+			queuefile(dirent);
 			return;
 		}
 
 		std::string path;
-                if (dirent.d_name != ".") {
-                        path = dirent.parent + "/" + dirent.d_name;
-                } else  {
-                        path = dirent.parent;
-                }
+		if (dirent.d_name != ".") {
+			path = dirent.parent + "/" + dirent.d_name;
+		} else  {
+			path = dirent.parent;
+		}
 
 #if 0
 		static long long a;
@@ -275,7 +275,7 @@ private:
 		addpath(dirent);
 
 		dirent.set_is_dir();
-                //queue.push_back(dirent);
+		//queue.push_back(dirent);
 
 		for (std::vector<struct us_dirent>::iterator it = l.begin(); it != l.end(); ++it) {
 			if (it->d_name == "." || it->d_name == "..")
@@ -284,10 +284,10 @@ private:
 			if (!use_getdents_type)
 				it->set_is_unknown();
 
-                        if (it->is_file()) {
+			if (it->is_file()) {
 				queuefile(*it);
-                        } else {
-                                dirheap.push(*it);
+			} else {
+				dirheap.push(*it);
 			}
 		}
 	}
