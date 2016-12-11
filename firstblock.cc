@@ -5,10 +5,8 @@
 #include <sys/ioctl.h>
 #include <sys/fcntl.h>
 #include <linux/fs.h>
-#include "fiemap.h"
+#include <linux/fiemap.h>
 #include <errno.h>
-
-#define FS_IOC_FIEMAP			_IOWR('f', 11, struct fiemap)
 
 static int use_fibmap = 1;
 
@@ -18,7 +16,7 @@ uint64_t firstblock(const char *fname)
 	struct fiemap *fiemap;
 	struct fiemap_extent *extent;
 	unsigned long block = 0;
-	char buf[sizeof(struct fiemap) + sizeof(struct fiemap_extent)];
+	char buf[sizeof(struct fiemap) + sizeof(struct fiemap_extent)] = {0};
 
 	fd = open(fname, O_RDONLY);
 	if (fd == -1) {
